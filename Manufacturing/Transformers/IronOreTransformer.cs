@@ -4,17 +4,19 @@ public partial class IronOreTransformer : Node, IOreTransformer
 {
 
     [Signal]
-    public delegate void OnOreTransformedEventHandler(Ingot ingot, int originalOreSupply, int transformedSupply);
+    public delegate void OnOreTransformedEventHandler(Ingot ore, int payload, int transformedSupply);
     private IProductTransformerStrategy strategy;
 
     public IronOreTransformer(IProductTransformerStrategy strategy){
         this.strategy = strategy;
     }
 
-    public void Transform(Ore ore, int supply)
+    public TransformerPayload Transform(Ore ore, int supply)
     {
-        int ingotSupply = strategy.Transform(ore, supply);
+        int payload = strategy.Transform(ore, supply);
 
-        EmitSignal("OnOreTransformed", (int)Ingot.Iron, supply, ingotSupply);
+        EmitSignal("OnOreTransformed", (int)Ingot.Iron, payload, supply);
+
+        return new TransformerPayload(new IronIngot(), payload, supply);
     }
 }

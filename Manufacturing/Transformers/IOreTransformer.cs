@@ -1,3 +1,3 @@
 public interface IOreTransformer{
-     void Transform(Ore ore, int supply);
+     TransformerPayload Transform(Ore ore, int supply);
 }

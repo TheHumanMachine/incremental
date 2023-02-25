@@ -10,11 +10,10 @@ public partial class main : Control
 	private Label ironOreLabel;
 	private Label ironIngotLabel; 
 
-	IDictionary<Ore, int> oreContainer = new Dictionary<Ore, int>();
-	IDictionary<Ingot, int> ingotContainer = new Dictionary<Ingot, int>();
+	IDictionary<string, int> oreContainer = new Dictionary<string, int>();
+	IDictionary<string, int> ingotContainer = new Dictionary<string, int>();
 
 	private Extractor extractor = new Extractor();
-	//private IronOreTransformer ironTransformer = new IronOreTransformer(new IngotTransformerStrategy(0.5));
 	
 	private IronOreTransformer ironTransformer = new IronOreTransformer(new IngotTransformerStrategy(0.5));
 
@@ -28,9 +27,7 @@ public partial class main : Control
 		ironIngotLabel.Text = "Iron ingot: 0";
 	
 		extractor.SetSupplySource(oreVein);
-		extractor.OnOreExtracted += onOreExtracted;
 
-		ironTransformer.OnOreTransformed += onOreTransformed;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -40,44 +37,69 @@ public partial class main : Control
 
 
 	private void _on_button_pressed(){
-		extractor.Extract();
+		var temp = extractor.Extract();
+		extractorhandler(temp);
 	}
 
 	private void _on_smelt_ironbtn_pressed(){
-		int transformSupply = oreContainer[Ore.Iron];
-		GD.Print("transform supply: " + transformSupply);
+		int transformSupply = oreContainer[new IronOre().Name];
 
-		ironTransformer.Transform(Ore.Iron, transformSupply);
+		var payload = ironTransformer.Transform(Ore.Iron, transformSupply);
+
+		transformHandler(payload);
 	}
 
-	private void onOreTransformed(Ingot ingotType, int originalOreSupply, int transformedSupply){
-		if(transformedSupply > 0){
-			oreContainer[Ore.Iron] -= originalOreSupply;
-		}
-
-		if(ingotContainer.ContainsKey(ingotType)){
-			int amt = ingotContainer[ingotType];
-			amt += transformedSupply;
-			ingotContainer[ingotType] = amt;
+	private void extractorhandler(RawPayload payload){
+		string materialKey = payload.Material.Name;
+		if(oreContainer.ContainsKey(materialKey)){
+			int amt = oreContainer[materialKey];
+			amt += payload.Supply;
+			oreContainer[materialKey] = amt;
 
 		}else{
-			ingotContainer[ingotType] = transformedSupply;
+			oreContainer[materialKey] = payload.Supply;
 		}
 
-		ironIngotLabel.Text = "Iron ingot: " + ingotContainer[ingotType];
-		ironOreLabel.Text = "Iron ore: " + oreContainer[Ore.Iron];
+		ironOreLabel.Text = "Iron ore: " + oreContainer[materialKey];
 	}
 
-	private void onOreExtracted(Ore oreType, int extracted){
-		if(oreContainer.ContainsKey(oreType)){
-			int amt = oreContainer[oreType];
-			amt += extracted;
-			oreContainer[oreType] = amt;
+	private void transformHandler(TransformerPayload payload){
+		string oreName = new IronOre().Name;
+		if(payload.Payload > 0){
+			oreContainer[oreName] -= payload.OriginalSupply;
+		}
+
+		var material = payload.Material.Name;
+		if(ingotContainer.ContainsKey(material)){
+			int amt = ingotContainer[material];
+			amt += payload.Payload;
+			ingotContainer[material] = amt;
 
 		}else{
-			oreContainer[oreType] = extracted;
+			ingotContainer[material] = payload.Payload;
 		}
 
-		ironOreLabel.Text = "Iron ore: " + oreContainer[oreType];
+		ironIngotLabel.Text = "Iron ingot: " + ingotContainer[material];
+		ironOreLabel.Text = "Iron ore: " + oreContainer[oreName];
 	}
+
+
+
+	// private void onOreTransformed(Ingot ingotType, int originalOreSupply, int transformedSupply){
+	// 	if(transformedSupply > 0){
+	// 		oreContainer[Ore.Iron] -= originalOreSupply;
+	// 	}
+
+	// 	if(ingotContainer.ContainsKey(ingotType)){
+	// 		int amt = ingotContainer[ingotType];
+	// 		amt += transformedSupply;
+	// 		ingotContainer[ingotType] = amt;
+
+	// 	}else{
+	// 		ingotContainer[ingotType] = transformedSupply;
+	// 	}
+
+	// 	ironIngotLabel.Text = "Iron ingot: " + ingotContainer[ingotType];
+	// 	ironOreLabel.Text = "Iron ore: " + oreContainer[Ore.Iron];
+	// }
 }
