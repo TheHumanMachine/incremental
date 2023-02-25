@@ -30,7 +30,7 @@ public partial class main : Control
 		extractor.SetSupplySource(oreVein);
 		extractor.OnOreExtracted += onOreExtracted;
 
-		ironTransformer.
+		ironTransformer.OnOreTransformed += onOreTransformed;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

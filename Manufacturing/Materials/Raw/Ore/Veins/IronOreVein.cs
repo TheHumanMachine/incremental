@@ -17,7 +17,7 @@ public class IronOreVein : IOreVein
 
     public OrePayload Extract(int amount)
     {
-        throw new System.NotImplementedException();
+        return new OrePayload(Ore.Iron, amount);
     }
 
     public Ore OreType()

@@ -1,6 +1,6 @@
 using Godot;
 
-public class IronOreTransformer : Node, IOreTransformer
+public partial class IronOreTransformer : Node, IOreTransformer
 {
 
     [Signal]
