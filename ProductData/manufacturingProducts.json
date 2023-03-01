@@ -1,0 +1,15 @@
+{
+	"products": [{
+			"Name": "Iron Ore",
+			"id": 0,
+			"inputs": [],
+			"output": 0
+		},
+		{
+			"Name": "Iron Ingot",
+			"id": 1,
+			"inputs": [0],
+			"output": 1
+		}
+	]
+}

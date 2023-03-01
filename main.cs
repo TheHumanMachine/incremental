@@ -16,6 +16,7 @@ public partial class main : Control
 	private Extractor extractor = new Extractor();
 	
 	private IronOreTransformer ironTransformer = new IronOreTransformer(new IngotTransformerStrategy(0.5));
+	private ResourceLookup loopUpTable = ResourceLookup.Instance;
 
 	public override void _Ready()
 	{
@@ -27,6 +28,8 @@ public partial class main : Control
 		ironIngotLabel.Text = "Iron ingot: 0";
 	
 		extractor.SetSupplySource(oreVein);
+
+		var temp = ResourceLookup.GetResourceFrame(10);
 
 	}
 
