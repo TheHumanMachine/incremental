@@ -29,7 +29,9 @@ public partial class main : Control
 	
 		extractor.SetSupplySource(oreVein);
 
-		var temp = ResourceLookup.GetResourceFrame(10);
+		var temp = ResourceLookup.GetResourceFrame(0);
+
+		GD.Print("look up frame: " + temp.Name);
 
 	}
 

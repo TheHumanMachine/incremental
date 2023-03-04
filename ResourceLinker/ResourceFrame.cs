@@ -1,13 +1,30 @@
+// Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
 using System.Collections.Generic;
 
-public struct ResourceFrame{
+public class PrimaryResourceFrame : IResourceFrame
+    {
         public string Name { get; init; }
-        public int Id { get; init; }
-        public List<int> Inputs { get; init; }
-        public int Output { get; init; }
+        public List<string> inputs { get; init; }
+    }
+
+public class Product
+{
+    public List<PrimaryResourceFrame> primary { get; init; }
+    public List<SecondaryResourceFrame> secondary { get; init; }
 }
 
 public class ResourceFrameRoot
 {
-    public List<ResourceFrame> products { get; set; }
+    public List<Product> products { get; init; }
+}
+
+public class SecondaryResourceFrame : IResourceFrame
+{
+    public string Name { get; init; }
+    public List<string> inputs { get; init; }
+}
+
+public interface IResourceFrame {
+    string Name { get; init; }
+    List<string> inputs { get; init; }
 }

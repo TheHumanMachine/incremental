@@ -1,15 +1,21 @@
 {
 	"products": [{
-			"Name": "Iron Ore",
-			"id": 0,
-			"inputs": [],
-			"output": 0
-		},
-		{
-			"Name": "Iron Ingot",
-			"id": 1,
-			"inputs": [0],
-			"output": 1
-		}
-	]
+		"primary": [{
+				"Name": "ore.iron",
+				"inputs": []
+			},
+			{
+				"Name": "ore.coal",
+				"inputs": []
+			},
+			{
+				"Name": "rock.limestone",
+				"inputs": []
+			}
+		],
+		"secondary": [{
+			"Name": "metal.steel",
+			"inputs": ["ore.iron", "ore.coal", "rock.limestone"]
+		}]
+	}]
 }
