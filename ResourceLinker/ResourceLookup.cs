@@ -4,12 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
-// Responsible for looking up resources
 
-// I need to know what inputs this product takes
-// input be product id
-// should return input array of ids of given inputs
-// ]
+
+// On init set the Transformer to the resource it will be
 
 public sealed class ResourceLookup
 {
@@ -22,20 +19,12 @@ public sealed class ResourceLookup
     private static IDictionary<int, List<int>> idToInputTable = new Dictionary<int, List<int>>(); 
     
 
-
-    // Read in json
-    // for each resource, set the name as the key and convert the position to Id
-    // 
-    //
-    // 
-
     private ResourceLookup()
     {
         try
         {
             string text = File.ReadAllText("ProductData/manufacturingProducts.json");
             ResourceFrameRoot root = JsonSerializer.Deserialize<ResourceFrameRoot>(text);
-
             // process primary resource frames
             var primaryProducts = root.products[0].primary;
 
@@ -88,6 +77,16 @@ public sealed class ResourceLookup
                 }
                 return instance;
             }
+        }
+    }
+
+    public static int GetIdByName(string name){
+        int id;
+        bool keyExists = nameToIDTable.TryGetValue(name, out id);
+        if(keyExists){
+            return id;
+        }else{
+            return -1;
         }
     }
 

@@ -1,10 +1,19 @@
-// Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
 using System.Collections.Generic;
+// generated from json to c#
+
+// Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+
+    public class Input
+    {
+        public string name { get; set; }
+        public int cost { get; set; }
+    }
+
 
 public class PrimaryResourceFrame : IResourceFrame
     {
         public string Name { get; init; }
-        public List<string> inputs { get; init; }
+        public List<Input> inputs { get; init; }
     }
 
 public class Product
@@ -21,10 +30,10 @@ public class ResourceFrameRoot
 public class SecondaryResourceFrame : IResourceFrame
 {
     public string Name { get; init; }
-    public List<string> inputs { get; init; }
+    public List<Input> inputs { get; init; }
 }
 
 public interface IResourceFrame {
     string Name { get; init; }
-    List<string> inputs { get; init; }
+    List<Input> inputs { get; init; }
 }

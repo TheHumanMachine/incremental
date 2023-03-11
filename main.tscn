@@ -50,7 +50,7 @@ offset_left = 148.0
 offset_top = 74.0
 offset_right = 241.0
 offset_bottom = 100.0
-text = "Iron Ingots: "
+text = "Steel Coils: "
 
 [node name="smeltIronbtn" type="Button" parent="background"]
 layout_mode = 0
@@ -60,5 +60,26 @@ offset_right = 269.0
 offset_bottom = 137.0
 text = "Smelt Iron Ore"
 
+[node name="sellSteelbtn" type="Button" parent="background"]
+offset_left = 295.0
+offset_top = 106.0
+offset_right = 416.0
+offset_bottom = 137.0
+text = "Sell Steel"
+
+[node name="moneyLabel" type="Label" parent="background"]
+layout_mode = 0
+offset_left = 298.0
+offset_top = 76.0
+offset_right = 416.0
+offset_bottom = 102.0
+text = "$:"
+
+[node name="dayElapsedLabel" type="Label" parent="background"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
 [connection signal="pressed" from="background/Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="background/smeltIronbtn" to="." method="_on_smelt_ironbtn_pressed"]
+[connection signal="pressed" from="background/sellSteelbtn" to="." method="_on_sell_steelbtn_pressed"]

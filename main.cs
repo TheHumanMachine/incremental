@@ -8,36 +8,71 @@ public partial class main : Control
 	
 	private IronOreVein oreVein;
 	private Label ironOreLabel;
-	private Label ironIngotLabel; 
+	private Label ironIngotLabel;
+	private Label moneyLabel;
+	private Label dayElapsedLabel;
 
-	IDictionary<string, int> oreContainer = new Dictionary<string, int>();
-	IDictionary<string, int> ingotContainer = new Dictionary<string, int>();
+	private double money = 0; 
 
-	private Extractor extractor = new Extractor();
+	IDictionary<string, int> primaryResourcesContainer = new Dictionary<string, int>();
+	IDictionary<string, int> secondaryResourcesContainer = new Dictionary<string, int>();
+
+	private Extractor extractor;
 	
 	private IronOreTransformer ironTransformer = new IronOreTransformer(new IngotTransformerStrategy(0.5));
+	private SteelTransformer steelTransformer;
+
 	private ResourceLookup loopUpTable = ResourceLookup.Instance;
+
+	private Timer timer;
+
+	private int day = 1;
 
 	public override void _Ready()
 	{
-		oreVein = new IronOreVein();
 		ironOreLabel = GetNode<Label>("background/ironOrelabel");
 		ironOreLabel.Text = "Iron ore: 0";
 
 		ironIngotLabel = GetNode<Label>("background/ironIngotLabel");
-		ironIngotLabel.Text = "Iron ingot: 0";
-	
-		extractor.SetSupplySource(oreVein);
+		ironIngotLabel.Text = "Steel coils: 0";
 
-		var temp = ResourceLookup.GetResourceFrame(0);
+		moneyLabel = GetNode<Label>("background/moneyLabel");
+		moneyLabel.Text = "$: 0";
 
-		GD.Print("look up frame: " + temp.Name);
+		dayElapsedLabel = GetNode<Label>("background/dayElapsedLabel");
+		dayElapsedLabel.Text = "Day: " + day;
+
+
+		ResourceNode resourceNode = new ResourceNode((PrimaryResourceFrame)ResourceLookup.GetResourceFrame(0), 100_000);
+
+		extractor = new Extractor(resourceNode);
+		
+		var steelFrame = (SecondaryResourceFrame)ResourceLookup.GetResourceFrame(3);
+		steelTransformer= new SteelTransformer(steelFrame);
+
+		timer = new Timer();
+
+		this.AddChild(timer);
+		timer.WaitTime = 2;
+		timer.Timeout += _on_Timer_timeout;
+		timer.Start();
+		//timer.connect("timeout", self, "_on_Timer_timeout")
+		//timer.start()
 
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+	}
+
+	private void UpdateTimerLabel(){
+		dayElapsedLabel.Text = "Day: " + day;
+	}
+
+	private void _on_Timer_timeout(){
+		day++;
+		dayElapsedLabel.Text = "Day: " + day;
 	}
 
 
@@ -47,46 +82,71 @@ public partial class main : Control
 	}
 
 	private void _on_smelt_ironbtn_pressed(){
-		int transformSupply = oreContainer[new IronOre().Name];
+		int transformSupply = primaryResourcesContainer["ore.iron"];
+		primaryResourcesContainer["ore.iron"] -= transformSupply;
 
-		var payload = ironTransformer.Transform(Ore.Iron, transformSupply);
+		UpdateIronOreLabelAmount();
+		//var payload = ironTransformer.Transform(Ore.Iron, transformSupply);
 
+		//transformHandler(payload);
+		var payload = steelTransformer.Transform(transformSupply);
 		transformHandler(payload);
 	}
 
-	private void extractorhandler(RawPayload payload){
-		string materialKey = payload.Material.Name;
-		if(oreContainer.ContainsKey(materialKey)){
-			int amt = oreContainer[materialKey];
+	private void extractorhandler(PrimaryResourcePayload payload){
+		string materialKey = payload.Resource.Name;
+
+		if(primaryResourcesContainer.ContainsKey(materialKey)){
+			int amt = primaryResourcesContainer[materialKey];
 			amt += payload.Supply;
-			oreContainer[materialKey] = amt;
+			primaryResourcesContainer[materialKey] = amt;
 
 		}else{
-			oreContainer[materialKey] = payload.Supply;
+			primaryResourcesContainer[materialKey] = payload.Supply;
 		}
 
-		ironOreLabel.Text = "Iron ore: " + oreContainer[materialKey];
+		UpdateIronOreLabelAmount();
 	}
 
-	private void transformHandler(TransformerPayload payload){
-		string oreName = new IronOre().Name;
-		if(payload.Payload > 0){
-			oreContainer[oreName] -= payload.OriginalSupply;
-		}
+	private void UpdateIronOreLabelAmount(){
+		ironOreLabel.Text = "Iron ore: " + primaryResourcesContainer["ore.iron"];
+	}
+	
+	private void UpdateSteelLabelAmount(){
+		ironIngotLabel.Text = "Steel Coils: " + secondaryResourcesContainer["metal.steel"];
+	}
 
-		var material = payload.Material.Name;
-		if(ingotContainer.ContainsKey(material)){
-			int amt = ingotContainer[material];
-			amt += payload.Payload;
-			ingotContainer[material] = amt;
+	private void UpdateMoneyLabelAmount(){
+		moneyLabel.Text = "$: " + money;
+	}
 
+	private void transformHandler(SecondaryResourcePayload payload){
+		string materialKey = payload.Resource.Name;
+		if(secondaryResourcesContainer.ContainsKey(materialKey)){
+			int amt = secondaryResourcesContainer[materialKey];
+			amt += payload.Supply;
+			secondaryResourcesContainer[materialKey] = amt;
 		}else{
-			ingotContainer[material] = payload.Payload;
+			secondaryResourcesContainer[materialKey] = payload.Supply;
+		}
+		UpdateSteelLabelAmount();
+	}
+
+	private void _on_sell_steelbtn_pressed(){
+		int sellAmount = 0;
+
+		if(secondaryResourcesContainer.ContainsKey("metal.steel")){
+			sellAmount = secondaryResourcesContainer["metal.steel"];
+			secondaryResourcesContainer["metal.steel"] = 0;
 		}
 
-		ironIngotLabel.Text = "Iron ingot: " + ingotContainer[material];
-		ironOreLabel.Text = "Iron ore: " + oreContainer[oreName];
+		money += sellAmount * 4.0;
+
+		UpdateMoneyLabelAmount();
+		UpdateSteelLabelAmount();
 	}
+
+
 
 
 

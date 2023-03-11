@@ -15,7 +15,19 @@
 		],
 		"secondary": [{
 			"Name": "metal.steel",
-			"inputs": ["ore.iron", "ore.coal", "rock.limestone"]
+			"inputs": [{
+					"name": "ore.iron",
+					"cost": 5
+				},
+				{
+					"name": "ore.coal",
+					"cost": 10
+				},
+				{
+					"name": "rock.limestone",
+					"cost": 5
+				}
+			]
 		}]
 	}]
 }
