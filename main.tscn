@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://cmrjolht4lqeh"]
+[gd_scene load_steps=2 format=3 uid="uid://cmrjolht4lqeh"]
 
 [ext_resource type="Script" path="res://main.cs" id="1_ep87p"]
-[ext_resource type="Script" path="res://Manufacturing/Transformers/Extractors/Extractor.cs" id="2_4on3k"]
 
 [node name="Node" type="Control"]
 layout_mode = 3
@@ -19,7 +18,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("2_4on3k")
 
 [node name="Button" type="Button" parent="background"]
 layout_mode = 1
@@ -61,11 +59,13 @@ offset_bottom = 137.0
 text = "Smelt Iron Ore"
 
 [node name="sellSteelbtn" type="Button" parent="background"]
+layout_mode = 0
 offset_left = 295.0
 offset_top = 106.0
 offset_right = 416.0
 offset_bottom = 137.0
-text = "Sell Steel"
+text = "Sell Steel Coils
+"
 
 [node name="moneyLabel" type="Label" parent="background"]
 layout_mode = 0
@@ -80,6 +80,61 @@ layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 
+[node name="buyFactorybtn" type="Button" parent="background"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -628.0
+offset_top = -69.0
+offset_right = -487.0
+offset_bottom = -38.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Buy Steel Factory"
+
+[node name="factoryPriceLabel" type="Label" parent="background"]
+layout_mode = 0
+offset_left = 13.0
+offset_top = 233.0
+offset_right = 122.0
+offset_bottom = 259.0
+text = "Factory Price: "
+
+[node name="factoryCountLabel" type="Label" parent="background"]
+layout_mode = 0
+offset_left = 13.0
+offset_top = 259.0
+offset_right = 130.0
+offset_bottom = 285.0
+text = "Factory Count: "
+
+[node name="MarginContainer" type="MarginContainer" parent="background"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -383.0
+offset_right = -275.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Panel" type="Panel" parent="background/MarginContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="background/MarginContainer/Panel"]
+layout_mode = 0
+offset_left = -2.0
+offset_top = -7.0
+offset_right = 1003.0
+offset_bottom = 376.0
+metadata/_edit_use_anchors_ = true
+
 [connection signal="pressed" from="background/Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="background/smeltIronbtn" to="." method="_on_smelt_ironbtn_pressed"]
 [connection signal="pressed" from="background/sellSteelbtn" to="." method="_on_sell_steelbtn_pressed"]
+[connection signal="pressed" from="background/buyFactorybtn" to="." method="_on_buy_factorybtn_pressed"]
