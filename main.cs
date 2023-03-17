@@ -7,7 +7,6 @@ public partial class main : Control
 	// Called when the node enters the scene tree for the first time.
 	private PackedScene factoryElementScene = GD.Load<PackedScene>("res://scenes/FactoryElement.tscn");
 	private VBoxContainer factoryContainer;
-	private IronOreVein oreVein;
 	private Label ironOreLabel;
 	private Label ironIngotLabel;
 	private Label moneyLabel;
@@ -15,7 +14,7 @@ public partial class main : Control
 	private Label factoryPriceLabel;
 	private Label factoryCountLabel;
 
-	private double money = 0; 
+	private double money = 100; 
 
 	IDictionary<string, int> primaryResourcesContainer = new Dictionary<string, int>();
 	IDictionary<string, int> secondaryResourcesContainer = new Dictionary<string, int>();
@@ -215,13 +214,15 @@ public partial class main : Control
 	private void _on_buy_factorybtn_pressed(){
 		if(money >= currentFactoryPrice){
 			money -= currentFactoryPrice;
-			factories.Add(new SimpleFactory(manufUnit));
+			IFactory temp = new SimpleFactory(manufUnit);
+			factories.Add(temp);
 
 			double nPrice = currentFactoryPrice + currentFactoryPrice * factoryPriceIncreasePercentage;
 			currentFactoryPrice = Mathf.RoundToInt(nPrice);
 
 			FactoryElement instance = (FactoryElement)factoryElementScene.Instantiate();
 			
+			instance.SetFactory(ref temp);
 			instance.SetFactoryNumber(factories.Count);
 			instance.SetFactoryResource("metal.steel");
 			factoryContainer.AddChild(instance);

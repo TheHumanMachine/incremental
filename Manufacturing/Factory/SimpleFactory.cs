@@ -1,3 +1,5 @@
+using Godot;
+
 public class SimpleFactory : IFactory
 {
     private IManufacturingUnit manufacturingUnit;
@@ -7,6 +9,7 @@ public class SimpleFactory : IFactory
     public SimpleFactory(IManufacturingUnit unit){
         this.manufacturingUnit = unit;
         AssignResource = this.manufacturingUnit.AssignedResource;
+        GD.Print("this.manufacturingUnit.AssignedResource: " + this.manufacturingUnit.AssignedResource);
     }
 
     public SecondaryResourcePayload GetOutput()

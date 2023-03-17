@@ -1,6 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://b68l1ubevqa0t"]
+[gd_scene load_steps=5 format=3 uid="uid://b68l1ubevqa0t"]
 
 [ext_resource type="Script" path="res://SceneScripts/FactoryElement.cs" id="1_tftdr"]
+[ext_resource type="Script" path="res://SceneScripts/UpgradePopupPanel.cs" id="2_sa5ll"]
+[ext_resource type="PackedScene" uid="uid://ctw8ejwluhpcq" path="res://scenes/Factory/upgrade_dialog.tscn" id="2_wrl8n"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_58pgw"]
 bg_color = Color(0.380392, 0.501961, 0.501961, 0.988235)
@@ -51,3 +53,24 @@ offset_bottom = -3.0
 grow_horizontal = 0
 grow_vertical = 2
 text = "View"
+
+[node name="PopupPanel" type="PopupPanel" parent="."]
+initial_position = 2
+title = "Upgrade popup"
+size = Vector2i(500, 361)
+borderless = false
+always_on_top = true
+script = ExtResource("2_sa5ll")
+
+[node name="UpgradeDialog" parent="PopupPanel" instance=ExtResource("2_wrl8n")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 496.0
+offset_bottom = 357.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[connection signal="pressed" from="viewbtn" to="." method="_on_viewbtn_pressed"]

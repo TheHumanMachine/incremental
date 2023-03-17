@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using Godot;
 
 public class ManufacturingUnit : IManufacturingUnit
 {
+    
     private List<ITransformer> transformers = new List<ITransformer>();
     private int defaultCapacity = 2;
     public SecondaryResourceFrame AssignedResource {get;init;}
@@ -12,6 +14,7 @@ public class ManufacturingUnit : IManufacturingUnit
     
     public ManufacturingUnit(SecondaryResourceFrame resource){
         AssignedResource = resource;
+        SlotOne = new ProcessUpgrade();
     }
 
     public void AddTransformer(ITransformer transformer)
@@ -38,9 +41,12 @@ public class ManufacturingUnit : IManufacturingUnit
         int supply = 0;
         if(transformers.Count > 0){
             foreach(var transformer in transformers){
+
                 var payload = transformer.Transform(defaultCapacity);
+
                 supply += payload.Supply;
             }
+                SlotOne.ModifyInput(ref supply);
         }
         return new SecondaryResourcePayload(AssignedResource, supply);
     }
